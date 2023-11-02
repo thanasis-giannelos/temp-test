@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: test-application
+  output:
+    ansi:
+      enabled: always
+
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    default-models-expand-depth: -1
+  version: '@springdoc-openapi-starter-webmvc-ui.version@'

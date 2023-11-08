@@ -1,6 +1,8 @@
 package com.sakis.temptest.controller;
 
-import com.sakis.temptest.user.User;
+import com.sakis.temptest.dto.UserDto;
+import com.sakis.temptest.entity.User;
+import com.sakis.temptest.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,33 +14,37 @@ import java.util.*;
 @RestController
 public class UserController {
 
-    private List<User> users = new ArrayList<>();
+    private UserService userService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable String userId) {
-        User user = new User("sakis", "kappas", 23);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
+
+//    @GetMapping("/{userId}")
+//    public ResponseEntity<User> getUser(@PathVariable Long userId) {
+//        User user = userService.getUser(userId);
+//        return new ResponseEntity<User>(user, HttpStatus.OK);
+//    }
 
     @GetMapping
-    public String getUsers(@RequestParam int page, @RequestParam(defaultValue = "20") int limit) {
-        return "users" + page + " " + limit;
+    public ResponseEntity<List<UserDto>> getUsers() {
+        return new ResponseEntity<>(userService.getUsers(),HttpStatus.OK);
     }
 
-    @PostMapping()
-    public ResponseEntity<String> createUser(@Valid @RequestBody User newUser) {
-
-        return new ResponseEntity<>(userId, HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
+        UserDto newUserDto = userService.createUser(userDto);
+        return new ResponseEntity<String>("user created\n"+newUserDto.toString(), HttpStatus.OK);
     }
 
-    @PatchMapping("/{userId}")
-    public String updateUser(@PathVariable String userId) {
-        return userId;
-    }
-
-    @DeleteMapping("/{userId}")
-    public String deleteUser(@PathVariable String userId) {
-        return userId;
-    }
+//    @DeleteMapping("/{userId}")
+//    public ResponseEntity deleteUser(@RequestParam String userId) {
+//        return ResponseEntity
+//    }
+//
+//    @PatchMapping("/{userId}")
+//    public ResponseEntity updateUser(@RequestParam String userId) {
+//        return ResponseEntity
+//    }
 
 }

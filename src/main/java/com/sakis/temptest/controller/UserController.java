@@ -20,11 +20,11 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<User> getUser(@PathVariable Long userId) {
-//        User user = userService.getUser(userId);
-//        return new ResponseEntity<User>(user, HttpStatus.OK);
-//    }
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
+        UserDto userDto = userService.getUser(userId);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
 
     @GetMapping
     public ResponseEntity<List<UserDto>> getUsers() {
@@ -37,14 +37,17 @@ public class UserController {
         return new ResponseEntity<String>("user created\n"+newUserDto.toString(), HttpStatus.OK);
     }
 
-//    @DeleteMapping("/{userId}")
-//    public ResponseEntity deleteUser(@RequestParam String userId) {
-//        return ResponseEntity
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+        userService.deleteUser(userId);
+        return new ResponseEntity<>("user deleted successfully", HttpStatus.OK);
+    }
+
+//    @PutMapping("/{userId}")
+//    public ResponseEntity<String> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
+//        UserDto updatedUserDto = userService.updateUser(userDto);
+//        return new ResponseEntity<String>("user updated\n"+updatedUserDto.toString(), HttpStatus.OK);
 //    }
-//
-//    @PatchMapping("/{userId}")
-//    public ResponseEntity updateUser(@RequestParam String userId) {
-//        return ResponseEntity
-//    }
+
 
 }

@@ -1,8 +1,12 @@
 package com.sakis.temptest.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public class UserDto {
 
+    @NotEmpty(message = "firstname must not be empty")
     private String firstName;
+    @NotEmpty(message = "lastname must not be empty")
     private String lastName;
 
     public UserDto() {

@@ -11,10 +11,11 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String firstName;
     private String lastName;
+    private String gender;
     @GeneratedValue(strategy = GenerationType.UUID)
     private String password;
 
@@ -22,10 +23,11 @@ public class User {
 
     }
 
-    public User(String firstName, String lastName, String password) {
+    public User(String firstName, String lastName, String password, String gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.password = password;
+        this.gender = gender;
     }
 
     public Long getId() {
@@ -58,6 +60,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     @Override

@@ -7,6 +7,6 @@ public class UserGenderValidation implements ConstraintValidator<ValidateUserGen
 
     @Override
     public boolean isValid(String gender, ConstraintValidatorContext constraintValidatorContext) {
-        return (gender == "Male" || gender == "Female");
+        return (gender.equalsIgnoreCase("male") || gender.equalsIgnoreCase("female"));
     }
 }

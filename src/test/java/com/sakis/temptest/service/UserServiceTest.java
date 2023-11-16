@@ -14,27 +14,28 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
+    // test dependencies
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private UserMapper userMapper;
 
+    // class to be tested
     @InjectMocks
     private UserService userService;
 
+    // test data
     private User user;
     private UserDto userDto;
 
@@ -52,7 +53,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenUsersList_whenGetAllUsers_thenReturnUsersList() {
+    void givenUsersList_whenGetAllUsers_thenReturnUsersList() {
 
         //given
         given(userRepository.findAll()).willReturn(List.of(user));
@@ -65,7 +66,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenEmptyUsersList_whenGetAllUsers_thenReturnEmptyUsersList() {
+    void givenEmptyUsersList_whenGetAllUsers_thenReturnEmptyUsersList() {
 
         //given
         given(userRepository.findAll()).willReturn(List.of());
@@ -75,11 +76,11 @@ public class UserServiceTest {
         List<UserDto> returnedUsers = userService.getUsers();
 
         //then
-        assertThat(returnedUsers).hasSize(0);
+        assertThat(returnedUsers).isEmpty();
     }
 
     @Test
-    public void givenUserDto_whenCreateUser_thenNewUserDto() {
+    void givenUserDto_whenCreateUser_thenNewUserDto() {
 
         //given
         given(userRepository.existsByFirstNameAndLastName(userDto.getFirstName(), userDto.getLastName()))
@@ -99,7 +100,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenExistingUserDto_whenCreateUser_thenThrowResourceAlreadyExistsException() {
+    void givenExistingUserDto_whenCreateUser_thenThrowResourceAlreadyExistsException() {
 
         //given
         given(userRepository.existsByFirstNameAndLastName(userDto.getFirstName(), userDto.getLastName()))
@@ -115,7 +116,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenExistingUserId_whenDeleteUser_thenDoNothing() {
+    void givenExistingUserId_whenDeleteUser_thenDoNothing() {
 
         //given
         given(userRepository.existsById(user.getId())).willReturn(true);
@@ -129,7 +130,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void givenNonExistingUserId_whenDeleteUser_thenThrowException() {
+    void givenNonExistingUserId_whenDeleteUser_thenThrowException() {
 
         //given
         given(userRepository.existsById(9L)).willReturn(false);
@@ -141,4 +142,22 @@ public class UserServiceTest {
 //        verify(userRepository, times(0)).deleteById(user.getId());
     }
 
+    @Test
+    void givenExistingUserId_whenGetUser_thenReturnUser() {
+        given(userRepository.findById(1L)).willReturn(Optional.of(user));
+        given(userMapper.userToUserDto(user)).willReturn(userDto);
+
+        UserDto userDto = userService.getUser(1L);
+
+        assertThat(userDto).isNotNull();
+    }
+
+    @Test
+    void givenNonExistingUserId_whenGetUser_thenReturnException() {
+        given(userRepository.findById(1L)).willReturn(Optional.empty());
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () ->userService.getUser(1L));
+
+        verify(userMapper, never()).userToUserDto(user);
+    }
 }
